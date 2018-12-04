@@ -17,7 +17,6 @@ public class GroupCreationTests {
     }
 
 
-
     @Test
     public void testGroupCreation() throws Exception {
         gotoGroupPage();
@@ -27,6 +26,7 @@ public class GroupCreationTests {
         returnToGroupPage();
         wd.findElement(By.linkText("Logout")).click();
     }
+
 
     private void login(String username, String password) {
         wd.get("http://10.13.11.80/addressbook/");
@@ -64,6 +64,7 @@ public class GroupCreationTests {
     private void gotoGroupPage() {
         wd.findElement(By.linkText("groups")).click();
     }
+
 
     @AfterMethod(alwaysRun = true)
     public void tearDown() throws Exception {
