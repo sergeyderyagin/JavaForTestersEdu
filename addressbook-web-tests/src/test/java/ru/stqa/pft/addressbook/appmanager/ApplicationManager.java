@@ -1,33 +1,37 @@
-package ru.stqa.pft.addressbook;
+package ru.stqa.pft.addressbook.appmanager;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import ru.stqa.pft.addressbook.model.ContactData;
 
 import java.util.concurrent.TimeUnit;
 
-import org.testng.annotations.*;
+public class ApplicationManager {
+    FirefoxDriver wd;
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.firefox.FirefoxDriver;
+    private SessionHelper sessionHelper;
+    private NavigationHelper navigationHelper;
+    private GroupHelper groupHelper;
 
-public class ContactCreationTests {
-    private WebDriver wd;
-
-    @BeforeClass(alwaysRun = true)
-    public void setUp() throws Exception {
-        wd = new FirefoxDriver();
+    public void init() {
         wd.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        login("admin", "secret");
-
+        wd.get("http://10.13.11.80/addressbook/");
+        groupHelper = new GroupHelper(wd);
+        navigationHelper = new NavigationHelper(wd);
+        sessionHelper = new SessionHelper(wd);
+        sessionHelper.login("admin", "secret");
     }
 
-    @Test
-    public void testContactCreation() throws Exception {
-        initContactCreation();
-        fillContactForm(new ContactData("testname", "testlastname", "testnickname", "restcompany",
-                "virtual address", "79110001122", "+79110003344", "+79110005566",
-                "1@test.ru", "2@test.ru", "3@test.ru", "www.go.ru"));
-        wd.findElement(By.linkText("Logout")).click();
+    public void stop() {
+        wd.quit();
     }
 
-    private void fillContactForm(ContactData contactData) {
+
+    public void initContactCreation() {
+        wd.findElement(By.linkText("add new")).click();
+    }
+
+    public void fillContactForm(ContactData contactData) {
         wd.findElement(By.name("firstname")).click();
         wd.findElement(By.name("firstname")).clear();
         wd.findElement(By.name("firstname")).sendKeys(contactData.getFirstName());
@@ -66,42 +70,18 @@ public class ContactCreationTests {
         wd.findElement(By.name("homepage")).sendKeys(contactData.getHomePage());
     }
 
-    private void initContactCreation() {
-        wd.findElement(By.linkText("add new")).click();
-    }
-
-    private void login(String username, String password) {
-        wd.get("http://10.13.11.80/addressbook/");
-        wd.findElement(By.name("user")).click();
-        wd.findElement(By.name("user")).clear();
-        wd.findElement(By.name("user")).sendKeys(username);
-        wd.findElement(By.name("pass")).clear();
-        wd.findElement(By.name("pass")).sendKeys(password);
-        wd.findElement(By.id("LoginForm")).submit();
+    public void submitContactCreation() {
+        wd.findElement(By.xpath("(//input[@name='submit'])[2]")).click();
     }
 
 
-    @AfterClass(alwaysRun = true)
-    public void tearDown() throws Exception {
-        wd.quit();
+    public GroupHelper getGroupHelper() {
+        return groupHelper;
     }
 
-    private boolean isElementPresent(By by) {
-        try {
-            wd.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+    public NavigationHelper getNavigationHelper() {
+        return navigationHelper;
     }
 
-    private boolean isAlertPresent() {
-        try {
-            wd.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
 
 }
