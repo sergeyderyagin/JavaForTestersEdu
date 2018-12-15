@@ -24,9 +24,6 @@ public class GroupHelper extends HelperBase {
         click(By.name("submit"));
     }
 
-    public void returnToGroupPage() {
-        click(By.linkText("groups"));
-    }
 
     public void selectGroup() {
         click(By.name("selected[]"));
@@ -36,5 +33,9 @@ public class GroupHelper extends HelperBase {
         click(By.name("delete"));
     }
 
+
+    public void returnToGroupPage() {
+        click(By.linkText("groups"));
+    }
 
 }
