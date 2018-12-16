@@ -13,6 +13,7 @@ public class ApplicationManager {
     private GroupHelper groupHelper;
 
     public void init() {
+        wd = new FirefoxDriver();
         wd.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         wd.get("http://10.13.11.80/addressbook/");
 
