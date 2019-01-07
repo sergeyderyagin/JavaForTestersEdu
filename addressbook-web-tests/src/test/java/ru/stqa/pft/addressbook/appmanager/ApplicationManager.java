@@ -30,8 +30,8 @@ public class ApplicationManager {
             wd = new InternetExplorerDriver();
         }
 
-        wd.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        wd.get("http://10.13.11.80/addressbook/");
+        wd.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+        wd.get("http://127.0.0.1/addressbook/");
 
         contactHelper = new ContactHelper(wd);
         groupHelper = new GroupHelper(wd);
