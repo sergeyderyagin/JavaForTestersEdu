@@ -11,6 +11,12 @@ public class ContactHelper extends HelperBase {
         super(wd);
     }
 
+    public void createContact(ContactData contact) {
+        initContactCreation();
+        fillContactForm(contact, true);
+        submitContactCreation();
+    }
+
     public void initContactCreation() {
         click(By.linkText("add new"));
     }
@@ -58,5 +64,9 @@ public class ContactHelper extends HelperBase {
 
     public void closeAlertAccept() {
         wd.switchTo().alert().accept();
+    }
+
+    public boolean isThereAContact() {
+        return isElementPresent(By.name("selected[]"));
     }
 }
