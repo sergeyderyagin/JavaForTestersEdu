@@ -31,7 +31,7 @@ public class ApplicationManager {
         }
 
         wd.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-        wd.get("http://127.0.0.1/addressbook/");
+        wd.get("http://10.13.11.80/addressbook/");
 
         contactHelper = new ContactHelper(wd);
         groupHelper = new GroupHelper(wd);

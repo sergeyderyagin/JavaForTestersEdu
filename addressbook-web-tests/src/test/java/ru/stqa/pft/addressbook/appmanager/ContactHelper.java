@@ -11,9 +11,9 @@ public class ContactHelper extends HelperBase {
         super(wd);
     }
 
-    public void createContact(ContactData contact) {
+    public void createContact(ContactData contact, boolean creation) {
         initContactCreation();
-        fillContactForm(contact, true);
+        fillContactForm(contact, creation);
         submitContactCreation();
     }
 
