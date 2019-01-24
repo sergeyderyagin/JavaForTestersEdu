@@ -4,6 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.GroupData;
 
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -17,7 +18,6 @@ public class GroupDeletionTests extends TestBase {
             app.getGroupHelper().createGroup(new GroupData("test1", null, null));
             app.getNavigationHelper().gotoGroupPage();
         }
-
         List<GroupData> before = app.getGroupHelper().getGroupList();
 
         app.getGroupHelper().selectGroup(before.size() - 1);

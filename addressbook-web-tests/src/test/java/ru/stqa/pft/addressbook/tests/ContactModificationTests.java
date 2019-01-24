@@ -1,30 +1,45 @@
 package ru.stqa.pft.addressbook.tests;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
+
+import java.util.HashSet;
+import java.util.List;
 
 public class ContactModificationTests extends TestBase {
 
     @Test
     public void testContactModification() {
         app.getNavigationHelper().gotoHomePage();
-
         // Создание контакта, если контакт отсутствует.
         if (!app.getContactHelper().isThereAContact()) {
-            app.getContactHelper().createContact(new ContactData("testname", "testlastname", "testnickname",
-                    "testcompany", "virtual address", "79110001122", "+79110003344",
+            app.getContactHelper().createContact(new ContactData("testfirstname", "testlastname", "testnickname",
+                    "testcompany", "testaddress", "79110001122", "+79110003344",
                     "+79110005566", "1@test.ru", "2@test.ru", "3@test.ru", "www.go.ru",
                     "test1"), true);
+            app.getNavigationHelper().gotoHomePage();
         }
 
-        app.getNavigationHelper().gotoHomePage();
+        List<ContactData> before = app.getContactHelper().getContactList();
         app.getContactHelper().initContactModification();
-        app.getContactHelper().fillContactForm(new ContactData("testname_edited", "testlastname_edited",
-                "testnickname_edited", "testcompany_edited", "virtual address_edited",
-                "79110001122_edited", "+79110003344_edited", "+79110005566_edited",
-                "1@test.ru_edited", "2@test.ru_edited", "3@test.ru_edited", "www.go.ru_edited",
-                null), false);
+        ContactData editingContact = new ContactData(before.get(0).getId(), "edited_testfirstname", "edited_testlastname","edited_testnickname",
+                "edited_testcompany", "edited_testaddress", "edited_79110001122", "edited_+79110003344",
+                "edited_+79110005566", "edited_1@test.ru", "edited_2@test.ru", "edited_3@test.ru", "edited_www.go.ru",
+                "test1");
+
+        app.getContactHelper().fillContactForm(editingContact, false);
         app.getContactHelper().submitContactModification();
         app.getNavigationHelper().gotoHomePage();
+
+        List<ContactData> after = app.getContactHelper().getContactList();
+
+        Assert.assertEquals(after.size(), before.size());
+
+        before.remove(0);
+        before.add(editingContact);
+        Assert.assertEquals(new HashSet<Object>(before), new HashSet<Object>(after));
+
+
     }
 }
