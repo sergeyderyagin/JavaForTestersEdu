@@ -1,6 +1,7 @@
 package ru.stqa.pft.addressbook.tests;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.GroupData;
 
@@ -9,30 +10,36 @@ import java.util.List;
 
 
 public class GroupDeletionTests extends TestBase {
+    private Comparator<? super GroupData> comparatorById = (c1, c2) -> Integer.compare(c1.getId(), c2.getId());
+
+    /**
+     * Создание группы, если группа отсутствует.
+     */
+    @BeforeMethod
+    public void ensurePreconditions() {
+        app.goTo().groupPage();
+        if (app.group().list().size() == 0) {
+            app.group().create(new GroupData().withName("test2name").withHeader("test2header").withFooter("test2footer"));
+            app.goTo().groupPage();
+        }
+    }
 
     @Test
     public void testGroupDeletion() {
-        app.getNavigationHelper().gotoGroupPage();
-        // Создание группы, если группа отсутствует.
-        if (!app.getGroupHelper().isThereAGroup()) {
-            app.getGroupHelper().createGroup(new GroupData("test1", null, null));
-            app.getNavigationHelper().gotoGroupPage();
-        }
-        List<GroupData> before = app.getGroupHelper().getGroupList();
+        List<GroupData> before = app.group().list();
+        int index = before.size() - 1;
 
-        app.getGroupHelper().selectGroup(before.size() - 1);
-        app.getGroupHelper().deleteSelectedGroups();
-        app.getGroupHelper().returnToGroupPage();
+        app.group().select(index);
+        app.group().delete();
 
-        List<GroupData> after = app.getGroupHelper().getGroupList();
+        app.goTo().groupPage();
+
+        List<GroupData> after = app.group().list();
         Assert.assertEquals(after.size(), before.size() - 1);
 
-        before.remove(before.size() - 1);
-
-        Comparator<? super GroupData> comparatorById = (c1, c2) -> Integer.compare(c1.getId(), c2.getId());
+        before.remove(index);
         before.sort(comparatorById);
         after.sort(comparatorById);
-
         Assert.assertEquals(before, after);
     }
 

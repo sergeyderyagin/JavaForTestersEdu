@@ -15,10 +15,22 @@ public class ContactHelper extends HelperBase {
         super(wd);
     }
 
-    public void createContact(ContactData contact, boolean creation) {
+    public void create(ContactData contact, boolean creation) {
         initContactCreation();
         fillContactForm(contact, creation);
         submitContactCreation();
+    }
+
+    public void modify(ContactData editingContact) {
+        initContactModification();
+        fillContactForm(editingContact, false);
+        submitContactModification();
+    }
+
+    public void deleteContact(int index) {
+        selectContact(index);
+        deleteSelectionContact();
+        closeAlertAccept();
     }
 
     public void initContactCreation() {
@@ -50,6 +62,7 @@ public class ContactHelper extends HelperBase {
         click(By.xpath("(//input[@name='submit'])[2]"));
     }
 
+
     public void initContactModification() {
         click(By.xpath("//img[@alt='Edit']"));
     }
@@ -57,6 +70,7 @@ public class ContactHelper extends HelperBase {
     public void submitContactModification() {
         click(By.xpath("(//input[@name='update'])[2]"));
     }
+
 
     public void selectContact(int index) {
         wd.findElements(By.name("selected[]")).get(index).click();
@@ -79,7 +93,7 @@ public class ContactHelper extends HelperBase {
         return wd.findElements(By.name("selected[]")).size();
     }
 
-    public List<ContactData> getContactList() {
+    public List<ContactData> list() {
         List<ContactData> contacts = new ArrayList<>();
         List<WebElement> elements = wd.findElements(By.cssSelector("tr[name=entry]"));
         for (WebElement element : elements) {
@@ -95,15 +109,4 @@ public class ContactHelper extends HelperBase {
         return contacts;
     }
 
-
-//    public List<GroupData> getContactList() {
-//        List<GroupData> contacts = new ArrayList<GroupData>();
-//        List<WebElement> elements = wd.findElements(By.cssSelector("tr[name=entry]"));
-//
-//        for(WebElement element : elements) {
-//            String firstname = element.findElement()
-//            String lastname = element
-//        }
-//
-//    }
 }

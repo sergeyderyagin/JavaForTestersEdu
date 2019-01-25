@@ -9,31 +9,29 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ContactCreationTests extends TestBase{
+    private Comparator<? super ContactData> comparatorById = (c1, c2) -> Integer.compare(c1.getId(), c2.getId());
 
-    @Test
+    @Test(enabled = false)
     public void testContactCreation() {
-        app.getNavigationHelper().gotoHomePage();
+        app.goTo().homePage();
+        List<ContactData> before = app.contact().list();
 
-        List<ContactData> before = app.getContactHelper().getContactList();
-        app.getContactHelper().initContactCreation();
         ContactData newContact = new ContactData("testfirstname2", "testlastname2", "testnickname",
                 "testcompany", "testaddress", "79110001122", "+79110003344",
                 "+79110005566", "1@test.ru", "2@test.ru", "3@test.ru", "www.go.ru",
                 "test1");
-        app.getContactHelper().fillContactForm(newContact, true);
-        app.getContactHelper().submitContactCreation();
-        app.getNavigationHelper().gotoHomePage();
-        List<ContactData> after = app.getContactHelper().getContactList();
+        app.contact().create(newContact, true);
+        app.goTo().homePage();
 
+        List<ContactData> after = app.contact().list();
         Assert.assertEquals(after.size(), before.size() + 1);
 
         before.add(newContact);
-
-        Comparator<? super ContactData> comparatorById = (c1, c2) -> Integer.compare(c1.getId(), c2.getId());
         before.sort(comparatorById);
         after.sort(comparatorById);
-
         Assert.assertEquals(before, after);
     }
+
+
 
 }
