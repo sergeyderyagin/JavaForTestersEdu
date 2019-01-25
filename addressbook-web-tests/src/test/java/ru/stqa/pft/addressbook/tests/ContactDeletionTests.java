@@ -5,11 +5,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 public class ContactDeletionTests extends TestBase {
-    private Comparator<? super ContactData> comparatorById = (c1, c2) -> Integer.compare(c1.getId(), c2.getId());
 
     /**
      * Создание контакта, если контакт отсутствует.
@@ -17,29 +16,27 @@ public class ContactDeletionTests extends TestBase {
     @BeforeMethod
     public void ensurePreconditions() {
         app.goTo().homePage();
-        if (!app.contact().isThereAContact()) {
-            app.contact().create(new ContactData("testfirstname", "testlastname", "testnickname",
-                    "testcompany", "testaddress", "79110001122", "+79110003344",
-                    "+79110005566", "1@test.ru", "2@test.ru", "3@test.ru", "www.go.ru",
-                    "test1"), true);
+        if (app.contact().list().size() == 0) {
+            app.contact().create(new ContactData().withFirstName("testfirstname2").withLastName("testlastname2"), true);
+                    //.withNickName("testnickname").withCompany( "testcompany").withAddress("testaddress")
+                    //.withHomePhoneNumber("79110001122").withMobilePhoneNumber("+79110003344").withWorkPhoneNumber("+79110005566")
+                    //.withEmail_1("1@test.ru").withEmail_2("2@test.ru").withEmail_3("3@test.ru").withHomePage("www.go.ru").withGroup("test2name"), true);
             app.goTo().homePage();
         }
     }
 
-    @Test(enabled = false)
+    @Test
     public void testContactDeletion() {
-        List<ContactData> before = app.contact().list();
-        int index = before.size() - 1;
+        Set<ContactData> before = app.contact().all();
+        ContactData deletingContact = before.iterator().next();
 
-        app.contact().deleteContact(index);
+        app.contact().delete(deletingContact);
         app.goTo().homePage();
 
-        List<ContactData> after = app.contact().list();
+        Set<ContactData> after = app.contact().all();
         Assert.assertEquals(after.size(), before.size() - 1);
 
-        before.remove(index);
-        before.sort(comparatorById);
-        after.sort(comparatorById);
+        before.remove(deletingContact);
         Assert.assertEquals(before, after);
 
     }

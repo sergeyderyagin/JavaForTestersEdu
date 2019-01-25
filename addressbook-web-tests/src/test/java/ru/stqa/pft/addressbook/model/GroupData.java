@@ -1,10 +1,15 @@
 package ru.stqa.pft.addressbook.model;
 
 public class GroupData {
-    private int id = Integer.MAX_VALUE;
+    private int id;
     private String name;
     private String header;
     private String footer;
+
+
+    public int getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -16,10 +21,6 @@ public class GroupData {
 
     public String getFooter() {
         return footer;
-    }
-
-    public int getId() {
-        return id;
     }
 
 
@@ -59,11 +60,14 @@ public class GroupData {
 
         GroupData groupData = (GroupData) o;
 
-        return name.equals(groupData.name);
+        if (id != groupData.id) return false;
+        return name != null ? name.equals(groupData.name) : groupData.name == null;
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 }

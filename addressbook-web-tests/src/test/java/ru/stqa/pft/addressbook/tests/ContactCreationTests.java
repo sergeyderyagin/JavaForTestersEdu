@@ -2,33 +2,34 @@ package ru.stqa.pft.addressbook.tests;
 
 
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+
 
 public class ContactCreationTests extends TestBase{
-    private Comparator<? super ContactData> comparatorById = (c1, c2) -> Integer.compare(c1.getId(), c2.getId());
 
-    @Test(enabled = false)
+    @Test
     public void testContactCreation() {
         app.goTo().homePage();
-        List<ContactData> before = app.contact().list();
+        Set<ContactData> before = app.contact().all();
 
-        ContactData newContact = new ContactData("testfirstname2", "testlastname2", "testnickname",
-                "testcompany", "testaddress", "79110001122", "+79110003344",
-                "+79110005566", "1@test.ru", "2@test.ru", "3@test.ru", "www.go.ru",
-                "test1");
+        ContactData newContact = new ContactData().withFirstName("testfirstname2").withLastName("testlastname2").withGroup("test2name");
+                //.withCompany( "testcompany").withAddress("testaddress")
+                //.withHomePhoneNumber("79110001122").withMobilePhoneNumber("+79110003344").withWorkPhoneNumber("+79110005566")
+                //.withEmail_1("1@test.ru").withEmail_2("2@test.ru").withEmail_3("3@test.ru").withHomePage("www.go.ru").withGroup("test2name");
+
         app.contact().create(newContact, true);
         app.goTo().homePage();
 
-        List<ContactData> after = app.contact().list();
+        Set<ContactData> after = app.contact().all();
         Assert.assertEquals(after.size(), before.size() + 1);
 
+        newContact.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt());
+
         before.add(newContact);
-        before.sort(comparatorById);
-        after.sort(comparatorById);
         Assert.assertEquals(before, after);
     }
 

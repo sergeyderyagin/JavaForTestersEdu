@@ -5,12 +5,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.GroupData;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.Set;
 
 
 public class GroupDeletionTests extends TestBase {
-    private Comparator<? super GroupData> comparatorById = (c1, c2) -> Integer.compare(c1.getId(), c2.getId());
 
     /**
      * Создание группы, если группа отсутствует.
@@ -26,20 +24,16 @@ public class GroupDeletionTests extends TestBase {
 
     @Test
     public void testGroupDeletion() {
-        List<GroupData> before = app.group().list();
-        int index = before.size() - 1;
+        Set<GroupData> before = app.group().all();
+        GroupData deletingGroup = before.iterator().next();
 
-        app.group().select(index);
-        app.group().delete();
-
+        app.group().delete(deletingGroup);
         app.goTo().groupPage();
 
-        List<GroupData> after = app.group().list();
+        Set<GroupData> after = app.group().all();
         Assert.assertEquals(after.size(), before.size() - 1);
 
-        before.remove(index);
-        before.sort(comparatorById);
-        after.sort(comparatorById);
+        before.remove(deletingGroup);
         Assert.assertEquals(before, after);
     }
 

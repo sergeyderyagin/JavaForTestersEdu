@@ -2,64 +2,23 @@ package ru.stqa.pft.addressbook.model;
 
 public class ContactData {
     private int id;
-    private final String firstName;
-    private final String lastName;
-    private final String nickName;
-    private final String company;
-    private final String address;
-    private final String homePhoneNumber;
-    private final String mobilePhoneNumber;
-    private final String workPhoneNumber;
-    private final String email1;
-    private final String email2;
-    private final String email3;
-    private final String homePage;
-    private final String group;
+    private String firstName;
+    private String lastName;
+//    private String nickName;
+//    private String company;
+//    private String address;
+//    private String homePhoneNumber;
+//    private String mobilePhoneNumber;
+//    private String workPhoneNumber;
+//    private String email1;
+//    private String email2;
+//    private String email3;
+//    private String homePage;
+    private String group;
 
-    public ContactData(int id, String firstName, String lastName, String nickName, String company, String address, String homePhoneNumber,
-                       String mobilePhoneNumber, String workPhoneNumber, String email1, String email2, String email3,
-                       String homePage, String group) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.nickName = nickName;
-        this.company = company;
-        this.address = address;
-        this.homePhoneNumber = homePhoneNumber;
-        this.mobilePhoneNumber = mobilePhoneNumber;
-        this.workPhoneNumber = workPhoneNumber;
-        this.email1 = email1;
-        this.email2 = email2;
-        this.email3 = email3;
-        this.homePage = homePage;
-        this.group = group;
-    }
-
-    public ContactData(String firstName, String lastName, String nickName, String company, String address, String homePhoneNumber,
-                       String mobilePhoneNumber, String workPhoneNumber, String email1, String email2, String email3,
-                       String homePage, String group) {
-        this.id = Integer.MAX_VALUE;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.nickName = nickName;
-        this.company = company;
-        this.address = address;
-        this.homePhoneNumber = homePhoneNumber;
-        this.mobilePhoneNumber = mobilePhoneNumber;
-        this.workPhoneNumber = workPhoneNumber;
-        this.email1 = email1;
-        this.email2 = email2;
-        this.email3 = email3;
-        this.homePage = homePage;
-        this.group = group;
-    }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -70,55 +29,126 @@ public class ContactData {
         return lastName;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getHomePhoneNumber() {
-        return homePhoneNumber;
-    }
-
-    public String getMobilePhoneNumber() {
-        return mobilePhoneNumber;
-    }
-
-    public String getWorkPhoneNumber() {
-        return workPhoneNumber;
-    }
-
-    public String getEmail1() {
-        return email1;
-    }
-
-    public String getEmail2() {
-        return email2;
-    }
-
-    public String getEmail3() {
-        return email3;
-    }
-
-    public String getHomePage() {
-        return homePage;
-    }
+//    public String getNickName() {
+//        return nickName;
+//    }
+//
+//    public String getCompany() {
+//        return company;
+//    }
+//
+//    public String getAddress() {
+//        return address;
+//    }
+//
+//    public String getHomePhoneNumber() {
+//        return homePhoneNumber;
+//    }
+//
+//    public String getMobilePhoneNumber() {
+//        return mobilePhoneNumber;
+//    }
+//
+//    public String getWorkPhoneNumber() {
+//        return workPhoneNumber;
+//    }
+//
+//    public String getEmail1() {
+//        return email1;
+//    }
+//
+//    public String getEmail2() {
+//        return email2;
+//    }
+//
+//    public String getEmail3() {
+//        return email3;
+//    }
+//
+//    public String getHomePage() {
+//        return homePage;
+//    }
 
     public String getGroup() {
         return group;
     }
 
 
+    public ContactData withId(int id) {
+        this.id = id;
+        return this;
+    }
+
+    public ContactData withFirstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public ContactData withLastName(String lastName) {
+        this.lastName = lastName;
+        return this;
+    }
+
+//    public ContactData withNickName(String nickName) {
+//        this.nickName = nickName;
+//        return this;
+//    }
+//
+//    public ContactData withCompany(String company) {
+//        this.company = company;
+//        return this;
+//    }
+//
+//    public ContactData withAddress(String address) {
+//        this.address = address;
+//        return this;
+//    }
+//
+//    public ContactData withHomePhoneNumber(String homePhoneNumber) {
+//        this.homePhoneNumber = homePhoneNumber;
+//        return this;
+//    }
+//
+//    public ContactData withMobilePhoneNumber(String mobilePhoneNumber) {
+//        this.mobilePhoneNumber = mobilePhoneNumber;
+//        return this;
+//    }
+//
+//    public ContactData withWorkPhoneNumber(String workPhoneNumber) {
+//        this.workPhoneNumber = workPhoneNumber;
+//        return this;
+//    }
+//
+//    public ContactData withEmail_1(String email1) {
+//        this.email1 = email1;
+//        return this;
+//    }
+//
+//    public ContactData withEmail_2(String email2) {
+//        this.email2 = email2;
+//        return this;
+//    }
+//
+//    public ContactData withEmail_3(String email3) {
+//        this.email3 = email3;
+//        return this;
+//    }
+//
+//    public ContactData withHomePage(String homePage) {
+//        this.homePage = homePage;
+//        return this;
+//    }
+
+    public ContactData withGroup(String group) {
+        this.group = group;
+        return this;
+    }
+
+
     @Override
     public String toString() {
         return "ContactData{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 '}';
@@ -131,13 +161,15 @@ public class ContactData {
 
         ContactData that = (ContactData) o;
 
+        if (id != that.id) return false;
         if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
         return lastName != null ? lastName.equals(that.lastName) : that.lastName == null;
     }
 
     @Override
     public int hashCode() {
-        int result = firstName != null ? firstName.hashCode() : 0;
+        int result = id;
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         return result;
     }
