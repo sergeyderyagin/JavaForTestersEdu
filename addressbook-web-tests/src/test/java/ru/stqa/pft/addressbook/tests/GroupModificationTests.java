@@ -1,22 +1,22 @@
 package ru.stqa.pft.addressbook.tests;
 
-import org.testng.Assert;
+import org.hamcrest.CoreMatchers;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.GroupData;
+import ru.stqa.pft.addressbook.model.Groups;
 
 import java.util.*;
 
-public class GroupModificationTests extends TestBase {
-    private Comparator<? super GroupData> comparatorById = (g1, g2) -> Integer.compare(g1.getId(), g2.getId());
+import static org.hamcrest.MatcherAssert.assertThat;
 
-    /**
-     * Создание группы, если группа отсутствует.
-     */
+public class GroupModificationTests extends TestBase {
+
+    // Создание контакта, если контакт отсутствует.
     @BeforeMethod
     public void ensurePreconditions() {
         app.goTo().groupPage();
-        if (app.group().list().size() == 0) {
+        if (app.group().all().size() == 0) {
             app.group().create(new GroupData().withName("test2name").withHeader("test2header").withFooter("test2footer"));
             app.goTo().groupPage();
         }
@@ -24,22 +24,21 @@ public class GroupModificationTests extends TestBase {
 
     @Test
     public void testGroupModification() {
-        List<GroupData> before = app.group().list();
-        int index = before.size() - 1;
+        Groups before = app.group().all();
+
+        GroupData editingGroup = before.iterator().next();
 
         GroupData editedGroup = new GroupData()
-                .withId(before.get(index).getId()).withName("test2name").withHeader("test2header").withFooter("test2footer");
+                .withId(editingGroup.getId()).withName("test2name").withHeader("test2header").withFooter("test2footer");
 
-        app.group().modify(index, editedGroup);
+        app.group().modify(editedGroup);
         app.goTo().groupPage();
 
-        List<GroupData> after = app.group().list();
+        Set<GroupData> after = app.group().all();
 
-        before.remove(index);
+        before.remove(editingGroup);
         before.add(editedGroup);
-        before.sort(comparatorById);
-        after.sort(comparatorById);
-        Assert.assertEquals(before, after);
+        assertThat(after, CoreMatchers.equalTo(before.without(editingGroup).withAdded(editedGroup)));
 
     }
 
