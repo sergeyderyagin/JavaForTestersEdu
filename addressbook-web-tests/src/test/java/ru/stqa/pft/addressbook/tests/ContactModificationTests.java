@@ -5,9 +5,8 @@ import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.testng.Assert.assertEquals;
 
 public class ContactModificationTests extends TestBase {
 
@@ -16,10 +15,10 @@ public class ContactModificationTests extends TestBase {
     public void ensurePreconditions() {
         app.goTo().homePage();
         if (app.contact().all().size() == 0) {
-            app.contact().create(new ContactData().withFirstName("testfirstname2").withLastName("testlastname2"), true);
-                    //.withCompany( "testcompany").withAddress("testaddress")
-                    //.withHomePhoneNumber("79110001122").withMobilePhoneNumber("+79110003344").withWorkPhoneNumber("+79110005566")
-                    //.withEmail_1("1@test.ru").withEmail_2("2@test.ru").withEmail_3("3@test.ru").withHomePage("www.go.ru").withGroup("test2name"), true);
+            app.contact().create(new ContactData().withFirstName("testfirstname2").withLastName("testlastname2")
+                    .withAddress("testaddress")
+                    .withHomePhone("79110001122").withMobilePhone("+79110003344").withWorkPhone("+79110005566")
+                    .withEmail_1("1@test.ru").withEmail_2("2@test.ru").withEmail_3("3@test.ru"), true);
             app.goTo().homePage();
         }
     }
@@ -30,21 +29,21 @@ public class ContactModificationTests extends TestBase {
         ContactData editingContact = before.iterator().next();
 
         ContactData editedContact = new ContactData()
-                .withId(editingContact.getId()).withFirstName("edited_testfirstname2").withLastName("edited_testlastname2").withGroup("test2name");
-                //.withNickName("edited_testnickname");//.withCompany( "edited_testcompany").withAddress("edited_testaddress")
-                //.withHomePhoneNumber("edited_79110001122").withMobilePhoneNumber("edited_+79110003344").withWorkPhoneNumber("edited_+79110005566")
-                //.withEmail_1("edited_1@test.ru").withEmail_2("edited_2@test.ru").withEmail_3("edited_3@test.ru").withHomePage("edited_www.go.ru").withGroup("test2name");
+                .withId(editingContact.getId()).withFirstName("edited_testfirstname2").withLastName("edited_testlastname2")
+                .withAddress("edited_testaddress")
+                .withHomePhone("edited_111").withMobilePhone("edited_222").withWorkPhone("edited_333")
+                .withEmail_1("edited_1@test.ru").withEmail_2("edited_2@test.ru").withEmail_3("edited_3@test.ru")
+                .withGroup("test2name");
         app.goTo().homePage();
 
         app.contact().modify(editedContact);
         app.goTo().homePage();
+        assertThat(app.contact().count(), equalTo(before.size()));
 
         Contacts after = app.contact().all();
-        assertEquals(after.size(), before.size());
-
         before.remove(editingContact);
         before.add(editedContact);
-        assertThat(after, equalTo(before.withAdded(editedContact)));
+        assertThat(after, equalTo(before.without(editingContact).withAdded(editedContact)));
     }
 
 }

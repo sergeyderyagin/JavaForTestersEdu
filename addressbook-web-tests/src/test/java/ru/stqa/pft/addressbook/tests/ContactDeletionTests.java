@@ -5,9 +5,8 @@ import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.testng.Assert.assertEquals;
 
 public class ContactDeletionTests extends TestBase {
 
@@ -16,10 +15,10 @@ public class ContactDeletionTests extends TestBase {
     public void ensurePreconditions() {
         app.goTo().homePage();
         if (app.contact().all().size() == 0) {
-            app.contact().create(new ContactData().withFirstName("testfirstname2").withLastName("testlastname2"), true);
-                    //.withNickName("testnickname").withCompany( "testcompany").withAddress("testaddress")
-                    //.withHomePhoneNumber("79110001122").withMobilePhoneNumber("+79110003344").withWorkPhoneNumber("+79110005566")
-                    //.withEmail_1("1@test.ru").withEmail_2("2@test.ru").withEmail_3("3@test.ru").withHomePage("www.go.ru").withGroup("test2name"), true);
+            app.contact().create(new ContactData().withFirstName("testfirstname2").withLastName("testlastname2")
+                    .withAddress("testaddress")
+                    .withHomePhone("79110001122").withMobilePhone("+79110003344").withWorkPhone("+79110005566")
+                    .withEmail_1("1@test.ru").withEmail_2("2@test.ru").withEmail_3("3@test.ru"), true);
             app.goTo().homePage();
         }
     }
@@ -31,9 +30,9 @@ public class ContactDeletionTests extends TestBase {
 
         app.contact().delete(deletingContact);
         app.goTo().homePage();
+        assertThat(app.contact().count(), equalTo(before.size() - 1));
 
         Contacts after = app.contact().all();
-        assertEquals(after.size(), before.size() - 1);
         assertThat(after, equalTo(before.without(deletingContact)));
     }
 
