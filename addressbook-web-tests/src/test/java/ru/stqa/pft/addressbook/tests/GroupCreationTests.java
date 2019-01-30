@@ -1,9 +1,16 @@
 package ru.stqa.pft.addressbook.tests;
 
 
+import com.thoughtworks.xstream.XStream;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.model.Groups;
+
+import java.io.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -11,12 +18,27 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GroupCreationTests extends TestBase {
 
-    @Test
-    public void testGroupCreation() {
+    @DataProvider
+    public Iterator<Object[]> validGroups() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groups.xml")));
+        String xml = "";
+        String line = reader.readLine();
+        while (line != null) {
+            xml += line;
+            line = reader.readLine();
+        }
+        XStream xStream = new XStream();
+        xStream.processAnnotations(GroupData.class);
+        List<GroupData> groups = (List<GroupData>) xStream.fromXML(xml);
+        return groups.stream().map((g) -> new Object[] {g}).collect(Collectors.toList()).iterator();
+    }
+
+
+    @Test(dataProvider = "validGroups")
+    public void testGroupCreation(GroupData newGroup) {
         app.goTo().groupPage();
         Groups before = app.group().all();
 
-        GroupData newGroup = new GroupData().withName("test2name").withHeader("test2header").withFooter("test2footer");
         app.group().create(newGroup);
         app.goTo().groupPage();
         assertThat(app.group().count(), equalTo(before.size() + 1));
@@ -26,7 +48,7 @@ public class GroupCreationTests extends TestBase {
                 before.withAdded(newGroup.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));
     }
 
-    @Test
+    @Test(enabled = false)
     public void testBadGroupCreation() {
         app.goTo().groupPage();
         Groups before = app.group().all();
