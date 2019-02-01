@@ -1,33 +1,74 @@
 package ru.stqa.pft.addressbook.model;
 
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
 import java.io.File;
 
+@Entity
+@Table(name = "addressbook")
 public class ContactData {
+
+    @Id
+    @Column(name = "id")
     private int id;
+
     @Expose
+    @Column(name = "firstname")
     private String firstName;
+
     @Expose
+    @Column(name = "lastname")
     private String lastName;
+
+    @Column(name = "address")
+    @Type(type = "text")
     private String address;
+
     @Expose
+    @Column(name = "home")
+    @Type(type = "text")
     private String homePhoneNumber;
+
     @Expose
+    @Column(name = "mobile")
+    @Type(type = "text")
     private String mobilePhoneNumber;
+
     @Expose
+    @Column(name = "work")
+    @Type(type = "text")
     private String workPhoneNumber;
+
     @Expose
+    @Column(name = "email")
+    @Type(type = "text")
     private String email1;
+
     @Expose
+    @Column(name = "email2")
+    @Type(type = "text")
     private String email2;
+
     @Expose
+    @Column(name = "email3")
+    @Type(type = "text")
     private String email3;
+
     @Expose
+    @Transient
     private String group;
+
+    @Transient
     private String allPhones;
+
+    @Transient
     private String allEmails;
-    private File photo;
+
+//    @Column(name = "photo")
+//    @Type(type = "text")
+//    private String photo;
 
 
     public int getId() {
@@ -80,9 +121,9 @@ public class ContactData {
 
     public String getAllEmails() { return allEmails; }
 
-    public File getPhoto() {
-        return photo;
-    }
+//    public File getPhoto() {
+//        return new File(photo);
+//    }
 
 
     public ContactData withId(int id) {
@@ -150,10 +191,10 @@ public class ContactData {
         return this;
     }
 
-    public ContactData withPhoto(File photo) {
-        this.photo = photo;
-        return this;
-    }
+//    public ContactData withPhoto(File photo) {
+//        this.photo = photo.getPath();
+//        return this;
+//    }
 
 
     @Override

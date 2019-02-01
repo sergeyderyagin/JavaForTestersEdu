@@ -13,19 +13,18 @@ public class ContactModificationTests extends TestBase {
     // Создание контакта, если контакт отсутствует.
     @BeforeMethod
     public void ensurePreconditions() {
-        app.goTo().homePage();
-        if (app.contact().all().size() == 0) {
+        if (app.db().contacts().size() == 0) {
             app.contact().create(new ContactData().withFirstName("testfirstname2").withLastName("testlastname2")
                     .withAddress("testaddress")
                     .withHomePhone("79110001122").withMobilePhone("+79110003344").withWorkPhone("+79110005566")
                     .withEmail_1("1@test.ru").withEmail_2("2@test.ru").withEmail_3("3@test.ru"), true);
-            app.goTo().homePage();
         }
     }
 
     @Test
     public void testContactModification() {
-        Contacts before = app.contact().all();
+        app.goTo().homePage();
+        Contacts before = app.db().contacts();
         ContactData editingContact = before.iterator().next();
 
         ContactData editedContact = new ContactData()
@@ -38,9 +37,9 @@ public class ContactModificationTests extends TestBase {
 
         app.contact().modify(editedContact);
         app.goTo().homePage();
-        assertThat(app.contact().count(), equalTo(before.size()));
+//        assertThat(app.contact().count(), equalTo(before.size()));
 
-        Contacts after = app.contact().all();
+        Contacts after = app.db().contacts();
         before.remove(editingContact);
         before.add(editedContact);
         assertThat(after, equalTo(before.without(editingContact).withAdded(editedContact)));

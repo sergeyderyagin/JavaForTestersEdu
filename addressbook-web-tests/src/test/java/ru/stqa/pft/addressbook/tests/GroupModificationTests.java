@@ -15,31 +15,29 @@ public class GroupModificationTests extends TestBase {
     // Создание контакта, если контакт отсутствует.
     @BeforeMethod
     public void ensurePreconditions() {
-        app.goTo().groupPage();
-        if (app.group().all().size() == 0) {
+        if (app.db().groups().size() == 0) {
             app.group().create(new GroupData().withName("test2name").withHeader("test2header").withFooter("test2footer"));
-            app.goTo().groupPage();
         }
     }
 
     @Test
     public void testGroupModification() {
-        Groups before = app.group().all();
+        app.goTo().groupPage();
+        Groups before = app.db().groups();
 
         GroupData editingGroup = before.iterator().next();
 
         GroupData editedGroup = new GroupData()
-                .withId(editingGroup.getId()).withName("test2name").withHeader("test2header").withFooter("test2footer");
+                .withId(editingGroup.getId()).withName("test2name_edited").withHeader("test2header_edited").withFooter("test2footer_edited");
 
         app.group().modify(editedGroup);
         app.goTo().groupPage();
         assertThat(app.group().count(), equalTo(before.size()));
 
-        Set<GroupData> after = app.group().all();
+        Set<GroupData> after = app.db().groups();
         before.remove(editingGroup);
         before.add(editedGroup);
         assertThat(after, equalTo(before.without(editingGroup).withAdded(editedGroup)));
-
     }
 
 }

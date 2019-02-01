@@ -1,0 +1,24 @@
+[
+  {
+    "firstName": "firstname 0",
+    "lastName": "lastname 0",
+    "homePhoneNumber": "+70",
+    "mobilePhoneNumber": "+80",
+    "workPhoneNumber": "+90",
+    "email1": "0@mail.ru",
+    "email2": "0@mail.com",
+    "email3": "0@mail.net",
+    "group": "name 0"
+  },
+  {
+    "firstName": "firstname 1",
+    "lastName": "lastname 1",
+    "homePhoneNumber": "+71",
+    "mobilePhoneNumber": "+81",
+    "workPhoneNumber": "+91",
+    "email1": "1@mail.ru",
+    "email2": "1@mail.com",
+    "email3": "1@mail.net",
+    "group": "name 0"
+  }
+]
