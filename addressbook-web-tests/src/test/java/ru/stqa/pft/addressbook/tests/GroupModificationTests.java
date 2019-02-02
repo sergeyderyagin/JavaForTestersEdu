@@ -37,6 +37,7 @@ public class GroupModificationTests extends TestBase {
         before.remove(editingGroup);
         before.add(editedGroup);
         assertThat(after, equalTo(before.without(editingGroup).withAdded(editedGroup)));
+        verifyGroupListInUI();
     }
 
 }

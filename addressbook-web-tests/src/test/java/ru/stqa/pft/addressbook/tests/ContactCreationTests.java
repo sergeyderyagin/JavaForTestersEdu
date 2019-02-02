@@ -50,6 +50,7 @@ public class ContactCreationTests extends TestBase{
         Contacts after = app.db().contacts();
         assertThat(after, equalTo(
                 before.withAdded(newContact.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));
+        verifyContactListInUI();
     }
 
 
