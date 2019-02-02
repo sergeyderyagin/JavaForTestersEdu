@@ -46,8 +46,8 @@ public class ContactDataGenerator {
                     .withFirstName(String.format("firstname %s", i)).withLastName(String.format("lastname %s", i))
                     .withHomePhone(String.format("+7%s", i)).withMobilePhone(String.format("+8%s", i)).withWorkPhone(String.format("+9%s", i))
                     .withEmail_1(String.format("%s@mail.ru", i)).withEmail_2(String.format("%s@mail.com", i)).withEmail_3(String.format("%s@mail.net", i))
-                    .withAddress(String.format("address_%s", i))
-                    .withGroup("name 0"));
+                    .withAddress(String.format("address_%s", i)));
+//                    .withGroup("name 0"));
         }
         return contacts;
     }

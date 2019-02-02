@@ -32,6 +32,7 @@ public class DbHelper {
         return new Groups(result);
     }
 
+
     public Contacts contacts() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();

@@ -7,8 +7,11 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
+import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.util.List;
+
+import static org.testng.Assert.assertEquals;
 
 public class ContactHelper extends HelperBase {
 
@@ -38,25 +41,42 @@ public class ContactHelper extends HelperBase {
         contactsCache = null;
     }
 
+    public void addToGroup(ContactData contact, GroupData group) {
+        selectById(contact.getId());
+        new Select(wd.findElement(By.name("to_group"))).selectByValue(String.valueOf(group.getId()));
+        click(By.name("add"));
+        contactsCache = null;
+    }
+
+    public void deleteFromGroup(ContactData contact,GroupData group) {
+        new Select(wd.findElement(By.name("group"))).selectByValue(String.valueOf(group.getId()));
+        selectById(contact.getId());
+        click(By.name("remove"));
+    }
+
 
     public void initContactCreation() {
         click(By.linkText("add new"));
     }
 
-    public void fillContactForm(ContactData contactData, boolean creation) {
-        type(By.name("firstname"), contactData.getFirstName());
-        type(By.name("lastname"), contactData.getLastName());
-        type(By.name("address"), contactData.getAddress());
-        type(By.name("home"), contactData.getHomePhone());
-        type(By.name("mobile"), contactData.getMobilePhone());
-        type(By.name("work"), contactData.getWorkPhone());
-        type(By.name("email"), contactData.getEmail1());
-        type(By.name("email2"), contactData.getEmail2());
-        type(By.name("email3"), contactData.getEmail3());
+    public void fillContactForm(ContactData contact, boolean creation) {
+        type(By.name("firstname"), contact.getFirstName());
+        type(By.name("lastname"), contact.getLastName());
+        type(By.name("address"), contact.getAddress());
+        type(By.name("home"), contact.getHomePhone());
+        type(By.name("mobile"), contact.getMobilePhone());
+        type(By.name("work"), contact.getWorkPhone());
+        type(By.name("email"), contact.getEmail1());
+        type(By.name("email2"), contact.getEmail2());
+        type(By.name("email3"), contact.getEmail3());
 //        attach(By.name("photo"), contactData.getPhoto());
 
         if (creation) {
-            new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroup());
+            if (contact.getGroups().size() > 0) {
+                assertEquals(contact.getGroups().size(), 1);
+                new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contact.getGroups().iterator().next().getName());
+
+            }
         } else {
             Assert.assertFalse(isElementPresent(By.name("new_group")));
         }
@@ -75,11 +95,9 @@ public class ContactHelper extends HelperBase {
         click(By.xpath("(//input[@name='update'])[2]"));
     }
 
-
     public void selectById(int id) {
         wd.findElement(By.cssSelector("input[value='" + id + "']")).click();
     }
-
 
     public void closeAlertAccept() {
         wd.switchTo().alert().accept();

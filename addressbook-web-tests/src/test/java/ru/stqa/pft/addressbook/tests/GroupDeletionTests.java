@@ -11,10 +11,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GroupDeletionTests extends TestBase {
 
-    // Создание контакта, если контакт отсутствует.
+    // Создание группы, если группа отсутствует.
     @BeforeMethod
     public void ensurePreconditions() {
         if (app.db().groups().size() == 0) {
+            app.goTo().groupPage();
             app.group().create(new GroupData().withName("test2name").withHeader("test2header").withFooter("test2footer"));
         }
     }
