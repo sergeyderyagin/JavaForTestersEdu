@@ -8,6 +8,7 @@
     "email1": "0@mail.ru",
     "email2": "0@mail.com",
     "email3": "0@mail.net",
+    "address": "address_0",
     "group": "name 0"
   },
   {
@@ -19,6 +20,7 @@
     "email1": "1@mail.ru",
     "email2": "1@mail.com",
     "email3": "1@mail.net",
+    "address": "address_1",
     "group": "name 0"
   }
 ]

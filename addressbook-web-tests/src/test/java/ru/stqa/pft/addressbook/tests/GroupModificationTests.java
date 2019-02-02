@@ -12,7 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GroupModificationTests extends TestBase {
 
-    // Создание контакта, если контакт отсутствует.
+    // Создание группы, если группа отсутствует.
     @BeforeMethod
     public void ensurePreconditions() {
         if (app.db().groups().size() == 0) {
@@ -24,7 +24,6 @@ public class GroupModificationTests extends TestBase {
     public void testGroupModification() {
         app.goTo().groupPage();
         Groups before = app.db().groups();
-
         GroupData editingGroup = before.iterator().next();
 
         GroupData editedGroup = new GroupData()

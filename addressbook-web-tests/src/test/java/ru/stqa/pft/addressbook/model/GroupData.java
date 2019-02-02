@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Objects;
 
 
 @XStreamAlias("group")
@@ -76,8 +77,10 @@ public class GroupData {
     @Override
     public String toString() {
         return "GroupData{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", name='" + name + '\'' +
+                ", header='" + header + '\'' +
+                ", footer='" + footer + '\'' +
                 '}';
     }
 
@@ -85,21 +88,15 @@ public class GroupData {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         GroupData groupData = (GroupData) o;
-
-        if (id != groupData.id) return false;
-        if (name != null ? !name.equals(groupData.name) : groupData.name != null) return false;
-        if (header != null ? !header.equals(groupData.header) : groupData.header != null) return false;
-        return footer != null ? footer.equals(groupData.footer) : groupData.footer == null;
+        return id == groupData.id &&
+                Objects.equals(name, groupData.name) &&
+                Objects.equals(header, groupData.header) &&
+                Objects.equals(footer, groupData.footer);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (header != null ? header.hashCode() : 0);
-        result = 31 * result + (footer != null ? footer.hashCode() : 0);
-        return result;
+        return Objects.hash(id, name, header, footer);
     }
 }
