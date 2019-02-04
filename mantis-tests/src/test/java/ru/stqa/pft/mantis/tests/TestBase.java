@@ -16,15 +16,15 @@ public class TestBase {
         app.init();
         System.out.println();
         app.ftp().upload(new File(
-                "src/test/resources/config_defaults_inc.php"),
-                "config_defaults_inc.php",
-                "config_defaults_inc.php.bak");
+                "src/test/resources/config_inc.php"),
+                "config_inc.php",
+                "config_inc.php.bak");
     }
 
     @AfterSuite(alwaysRun = true)
     public void tearDown() throws IOException {
         app.stop();
-        app.ftp().restore("config_defaults_inc.php.bak", "config_defaults_inc.php");
+        app.ftp().restore("config_inc.php.bak", "config_inc.php");
     }
 
 }

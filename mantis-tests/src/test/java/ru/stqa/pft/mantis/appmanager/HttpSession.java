@@ -40,7 +40,7 @@ public class HttpSession {
         CloseableHttpResponse response = httpClient.execute(post);
         String body = getTextFrom(response);
         System.out.println(body);
-        return body.contains(String.format("<span class=\"label hidden-xs label-default arrowed\">%s</span>", user));  // Actual for mantisbt-2.19.0
+        return body.contains(String.format("<span class=\"italic\">%s</span>", user));
     }
 
     private String getTextFrom(CloseableHttpResponse response) throws IOException {
@@ -56,6 +56,6 @@ public class HttpSession {
         HttpGet get = new HttpGet(app.getProperty("web.url"));
         CloseableHttpResponse response = httpClient.execute(get);
         String body = getTextFrom(response);
-        return body.contains(String.format("<span class=\"label hidden-xs label-default arrowed\">%s</span>" , user));  // Actual for mantisbt-2.19.0
+        return body.contains(String.format("<span class=\"italic\">%s</span>", user));
     }
 }
