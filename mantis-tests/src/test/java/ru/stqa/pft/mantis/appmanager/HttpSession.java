@@ -39,7 +39,6 @@ public class HttpSession {
         System.out.println("******************************************************************************************");
         CloseableHttpResponse response = httpClient.execute(post);
         String body = getTextFrom(response);
-        System.out.println(body);
         return body.contains(String.format("<span class=\"italic\">%s</span>", user));
     }
 

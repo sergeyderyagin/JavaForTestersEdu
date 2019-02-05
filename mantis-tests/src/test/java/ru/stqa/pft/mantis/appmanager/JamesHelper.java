@@ -21,9 +21,9 @@ public class JamesHelper {
 
     private Session mailSession;
     private Store store;
-    private String mailServer;
+    private String mailserver;
 
-    public JamesHelper (ApplicationManager app) {
+    JamesHelper (ApplicationManager app) {
         this.app = app;
         telnet = new TelnetClient();
         mailSession = Session.getDefaultInstance(System.getProperties());
@@ -37,9 +37,9 @@ public class JamesHelper {
         return result.trim().equals("User " + name + " exist");
     }
 
-    public void createUser(String name, String pass) {
+    public void createUser(String name, String passwd) {
         initTelnetSession();
-        write("adduser " + name + " " + pass);
+        write("adduser " + name + " " + passwd);
         String result = readUntil("User " + name + " added");
         closeTelnetSession();
     }
@@ -53,13 +53,13 @@ public class JamesHelper {
 
 
     private void initTelnetSession() {
-        mailServer = app.getProperty("mailserver.host");
+        mailserver = app.getProperty("mailserver.host");
         int port = Integer.parseInt(app.getProperty("mailserver.port"));
         String login = app.getProperty("mailserver.adminlogin");
         String password = app.getProperty("mailserver.adminpassword");
 
         try {
-            telnet.connect(mailServer, port);
+            telnet.connect(mailserver, port);
             in = telnet.getInputStream();
             out = new PrintStream(telnet.getOutputStream());
         } catch (Exception e) {
@@ -68,15 +68,15 @@ public class JamesHelper {
 
         readUntil("Login id:");
         write("");
-        readUntil("Password id:");
+        readUntil("Password:");
         write("");
 
         readUntil("Login id:");
         write(login);
-        readUntil("Password id:");
+        readUntil("Password:");
         write(password);
 
-        readUntil("Welcome " + login + ". HELP for a list of commands.");
+        readUntil("Welcome " + login + ". HELP for a list of commands");
     }
 
     private String readUntil(String pattern) {
@@ -85,7 +85,7 @@ public class JamesHelper {
             StringBuffer sb = new StringBuffer();
             char ch = (char) in.read();
             while (true) {
-                System.out.println(ch);
+                System.out.print(ch);
                 sb.append(ch);
                 if (ch == lastChar) {
                     if (sb.toString().endsWith(pattern)) {
@@ -130,7 +130,7 @@ public class JamesHelper {
 
     private Folder openInbox(String username, String password) throws MessagingException {
         store = mailSession.getStore("pop3");
-        store.connect(mailServer, username, password);
+        store.connect(mailserver, username, password);
         Folder folder = store.getDefaultFolder().getFolder("INBOX");
         folder.open(Folder.READ_WRITE);
         return folder;
