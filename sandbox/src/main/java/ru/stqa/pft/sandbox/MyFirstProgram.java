@@ -8,7 +8,7 @@ public class MyFirstProgram {
         System.out.println(distance(point1, point2));
 
         // second part of second task
-        System.out.println(point1.distance(5, 5));
+        System.out.println(point1.distance(point2));
 
 	}
 
