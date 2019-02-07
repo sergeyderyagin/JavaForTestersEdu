@@ -14,6 +14,7 @@ import java.util.List;
 import static org.testng.Assert.assertEquals;
 
 public class ContactHelper extends HelperBase {
+    private Contacts contactsCache = null;
 
     ContactHelper(WebDriver wd) {
         super(wd);
@@ -43,7 +44,7 @@ public class ContactHelper extends HelperBase {
 
     public void addToGroup(ContactData contact, GroupData group) {
         selectById(contact.getId());
-        new Select(wd.findElement(By.name("to_group"))).selectByValue(String.valueOf(group.getId()));
+        click(By.xpath("//select[@name='to_group']//option[@value='" + group.getId() + "']"));
         click(By.name("add"));
         contactsCache = null;
     }
@@ -52,6 +53,8 @@ public class ContactHelper extends HelperBase {
         new Select(wd.findElement(By.name("group"))).selectByValue(String.valueOf(group.getId()));
         selectById(contact.getId());
         click(By.name("remove"));
+        contactsCache = null;
+
     }
 
 
@@ -104,7 +107,6 @@ public class ContactHelper extends HelperBase {
     }
 
 
-    private Contacts contactsCache = null;
     public Contacts all() {
         if (contactsCache != null) {
             return new Contacts(contactsCache);
