@@ -20,6 +20,7 @@ public class ApplicationManager {
     private FtpHelper ftp;
     private MailHelper mailHelper;
     private JamesHelper jamesHelper;
+    private ResetPasswordHelper resetPassword;
 
 
     public ApplicationManager() {
@@ -27,9 +28,8 @@ public class ApplicationManager {
     }
 
     public void init() throws IOException {
-        String target = System.getProperty("target", "local.properties");
+        String target = System.getProperty("target", "mantis.local.properties");
         properties.load(new FileReader(new File(String.format("src/test/resources/%s", target))));
-
     }
 
     public void stop() {
@@ -38,31 +38,13 @@ public class ApplicationManager {
         }
     }
 
-    public HttpSession newSession() {
-        return new HttpSession(this);
-    }
-
 
     public String getProperty(String key) {
         return properties.getProperty(key);
     }
 
-    public RegistrationHelper registration() {
-        if (registrationHelper == null) {
-            registrationHelper = new RegistrationHelper(this);
-        }
-        return registrationHelper;
-    }
-
-    public FtpHelper ftp() {
-        if (ftp == null) {
-            ftp = new FtpHelper(this);
-        }
-        return ftp;
-    }
-
     public WebDriver getDriver() {
-        if(wd == null) {
+        if (wd == null) {
             String browser = properties.getProperty("web.browser");
             if (browser.equals(BrowserType.FIREFOX)) {
                 wd = new FirefoxDriver();
@@ -75,6 +57,18 @@ public class ApplicationManager {
             wd.get(properties.getProperty("web.baseUrl"));
         }
         return wd;
+    }
+
+    public HttpSession newSession() {
+        return new HttpSession(this);
+    }
+
+
+    public FtpHelper ftp() {
+        if (ftp == null) {
+            ftp = new FtpHelper(this);
+        }
+        return ftp;
     }
 
     public MailHelper mail() {
@@ -91,4 +85,18 @@ public class ApplicationManager {
         return jamesHelper;
     }
 
+
+    public RegistrationHelper registration() {
+        if (registrationHelper == null) {
+            registrationHelper = new RegistrationHelper(this);
+        }
+        return registrationHelper;
+    }
+
+    public ResetPasswordHelper resetPassword() {
+        if (resetPassword == null) {
+            resetPassword = new ResetPasswordHelper(this);
+        }
+        return resetPassword;
+    }
 }

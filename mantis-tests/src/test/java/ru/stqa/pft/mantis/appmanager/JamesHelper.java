@@ -1,6 +1,7 @@
 package ru.stqa.pft.mantis.appmanager;
 
 import org.apache.commons.net.telnet.TelnetClient;
+import ru.lanwen.verbalregex.VerbalExpression;
 import ru.stqa.pft.mantis.model.MailMessage;
 
 import javax.mail.*;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 
 public class JamesHelper {
+
     private ApplicationManager app;
 
     private TelnetClient telnet;
@@ -23,7 +25,7 @@ public class JamesHelper {
     private Store store;
     private String mailserver;
 
-    JamesHelper (ApplicationManager app) {
+    JamesHelper(ApplicationManager app) {
         this.app = app;
         telnet = new TelnetClient();
         mailSession = Session.getDefaultInstance(System.getProperties());
@@ -46,13 +48,13 @@ public class JamesHelper {
 
     public void deleteUser(String name) {
         initTelnetSession();
-        write("deluser  " + name);
+        write("deluser " + name);
         String result = readUntil("User " + name + " deleted");
         closeTelnetSession();
     }
 
-
     private void initTelnetSession() {
+        System.out.println("initTelnetSession");
         mailserver = app.getProperty("mailserver.host");
         int port = Integer.parseInt(app.getProperty("mailserver.port"));
         String login = app.getProperty("mailserver.adminlogin");
@@ -61,25 +63,30 @@ public class JamesHelper {
         try {
             telnet.connect(mailserver, port);
             in = telnet.getInputStream();
-            out = new PrintStream(telnet.getOutputStream());
+            out = new PrintStream( telnet.getOutputStream() );
+
         } catch (Exception e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
+        // Don't know why it doesn't allow to login at the first attempt
         readUntil("Login id:");
         write("");
         readUntil("Password:");
         write("");
 
+        // Secondlogin attempt, must be successful
         readUntil("Login id:");
         write(login);
         readUntil("Password:");
         write(password);
 
+        // Read welcome message
         readUntil("Welcome " + login + ". HELP for a list of commands");
     }
 
-    private String readUntil(String pattern) {
+    private String readUntil (String pattern) {
         try {
             char lastChar = pattern.charAt(pattern.length() - 1);
             StringBuffer sb = new StringBuffer();
@@ -100,7 +107,6 @@ public class JamesHelper {
         return null;
     }
 
-
     private void write(String value) {
         try {
             out.println(value);
@@ -113,6 +119,7 @@ public class JamesHelper {
 
     private void closeTelnetSession() {
         write("quit");
+        System.out.println("closeTelnetSession");
     }
 
     public void drainEmail(String username, String password) throws MessagingException {
@@ -136,7 +143,6 @@ public class JamesHelper {
         return folder;
     }
 
-
     public List<MailMessage> waitForMail(String username, String password, long timeout) throws MessagingException {
         long now = System.currentTimeMillis();
         while (System.currentTimeMillis() < now + timeout) {
@@ -150,17 +156,17 @@ public class JamesHelper {
                 e.printStackTrace();
             }
         }
-        throw new Error("No mail");
+        throw new Error("No mail :(");
     }
 
     public List<MailMessage> getAllMail(String username, String password) throws MessagingException {
         Folder inbox = openInbox(username, password);
-        List<MailMessage> messages = Arrays.asList(inbox.getMessages()).stream().map((m) -> toModelMail(m)).collect(Collectors.toList());
+        List<MailMessage> messages = Arrays.asList(inbox.getMessages()).stream().map((m) -> toModeMail(m)).collect(Collectors.toList());
         closeFolder(inbox);
         return messages;
     }
 
-    public static MailMessage toModelMail(Message m) {
+    public static MailMessage toModeMail(Message m) {
         try {
             return new MailMessage(m.getAllRecipients()[0].toString(), (String) m.getContent());
         } catch (MessagingException e) {
@@ -168,7 +174,14 @@ public class JamesHelper {
             return null;
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return  null;
         }
     }
+
+    public String findConfirmationLink(List<MailMessage> mailMessages, String email) {
+        MailMessage mailMessage = mailMessages.stream().filter((m) -> m.to.equals(email)).findFirst().get();
+        VerbalExpression regex = VerbalExpression.regex().find("http://").nonSpace().oneOrMore().build();
+        return regex.getText(mailMessage.text);
+    }
+
 }
