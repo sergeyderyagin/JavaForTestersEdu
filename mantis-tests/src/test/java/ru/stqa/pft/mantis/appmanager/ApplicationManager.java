@@ -21,6 +21,7 @@ public class ApplicationManager {
     private MailHelper mailHelper;
     private JamesHelper jamesHelper;
     private ResetPasswordHelper resetPassword;
+    private SoapHelper soapHelper;
 
 
     public ApplicationManager() {
@@ -98,5 +99,12 @@ public class ApplicationManager {
             resetPassword = new ResetPasswordHelper(this);
         }
         return resetPassword;
+    }
+
+    public SoapHelper soap (){
+        if (soapHelper == null){
+            soapHelper = new SoapHelper(this);
+        }
+        return soapHelper;
     }
 }
