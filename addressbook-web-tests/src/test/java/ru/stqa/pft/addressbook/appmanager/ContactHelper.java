@@ -44,7 +44,9 @@ public class ContactHelper extends HelperBase {
 
     public void addToGroup(ContactData contact, GroupData group) {
         selectById(contact.getId());
-        click(By.xpath("//select[@name='to_group']//option[@value='" + group.getId() + "']"));
+//        click(By.xpath("//select[@name='to_group']//option[@value='" + group.getId() + "']"));
+        new Select(wd.findElement(By.name("to_group"))).selectByValue(String.valueOf(group.getId()));
+
         click(By.name("add"));
         contactsCache = null;
     }
@@ -152,5 +154,14 @@ public class ContactHelper extends HelperBase {
                 .withId(contact.getId()).withFirstName(firstname).withLastName(lastname)
                 .withHomePhone(home).withMobilePhone(mobile).withWorkPhone(work)
                 .withEmail_1(email1).withEmail_2(email2).withEmail_3(email3);
+    }
+
+    public ContactData getContactById(Contacts contacts, int id) {
+        for(ContactData contact : contacts) {
+            if (contact.getId() == id) {
+                return contact;
+            }
+        }
+        return null;
     }
 }

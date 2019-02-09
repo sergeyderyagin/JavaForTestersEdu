@@ -91,4 +91,13 @@ public class GroupHelper extends HelperBase {
         return isElementPresent(By.name("selected[]"));
     }
 
+    public GroupData getGroupById(Groups groups, int id) {
+        for(GroupData group : groups) {
+            if (group.getId() == id) {
+                return group;
+            }
+        }
+        return null;
+    }
+
 }
