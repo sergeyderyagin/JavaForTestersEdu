@@ -2,6 +2,7 @@ package ru.stqa.pft.mantis.appmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import ru.stqa.pft.mantis.model.UserData;
 
 public class ResetPasswordHelper extends HelperBase{
     ResetPasswordHelper(ApplicationManager app) {
@@ -24,8 +25,8 @@ public class ResetPasswordHelper extends HelperBase{
         wd.findElement(By.linkText("Manage Users")).click();
     }
 
-    public void chooseUser(){
-        wd.findElement(By.cssSelector("a[href*='manage_user_edit_page.php']:not([href='manage_user_edit_page.php?user_id=1']")).click();
+    public void chooseUser(UserData user){
+        click(By.linkText(user.getUsername()));
     }
 
     public String getUserName(){
@@ -46,7 +47,6 @@ public class ResetPasswordHelper extends HelperBase{
         type(By.name("password_confirm"),password);
         click(By.cssSelector("input[value='Update User']"));
     }
-
 
     private void checkUserLogged(String username) {
         WebElement element = wd.findElement(By.cssSelector("span[class='italic']"));

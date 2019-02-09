@@ -5,6 +5,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.mantis.appmanager.HttpSession;
 import ru.stqa.pft.mantis.model.MailMessage;
+import ru.stqa.pft.mantis.model.UserData;
+import ru.stqa.pft.mantis.model.Users;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -24,24 +26,22 @@ public class ResetPasswordTests extends TestBase {
         app.resetPassword().loginViaUi(app.getProperty("web.user"), app.getProperty("web.pass"));
         app.resetPassword().goToManagePage();
         app.resetPassword().goToManageUsersPage();
-        app.resetPassword().chooseUser();
-        String user = String.valueOf(app.resetPassword().getUserName());
-        String email = String.valueOf(app.resetPassword().getUserMail());
+        UserData user = app.db().users().iterator().next();
+        app.resetPassword().chooseUser(user);
+
+        String username = user.getUsername();
+        String email = user.getEmail();
         String password = "password";
-        System.out.println(user);
-        System.out.println(email);
 
         app.resetPassword().resetPassword();
-
-        List<MailMessage> mailMessages = app.mail().waitForMail(1, 20000);
-//        List<MailMessage> mailMessages = app.james().waitForMail(user, password, 60000);
-        String confirmationLink = app.james().findConfirmationLink(mailMessages, email);
+        List<MailMessage> mailMessages = app.mail().waitForMail(1, 10000);
+        String confirmationLink = app.mail().findConfirmationLink(mailMessages, email);
 
         app.resetPassword().confirmChangePassword(confirmationLink, password);
 
         HttpSession session = app.newSession();
-        assertTrue(session.login(user, password));
-        assertTrue(session.isLoggedInAs(user));
+        assertTrue(session.login(username, password));
+        assertTrue(session.isLoggedInAs(username));
     }
 
     @AfterMethod(alwaysRun = true)

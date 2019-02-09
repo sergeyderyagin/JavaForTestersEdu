@@ -22,6 +22,7 @@ public class ApplicationManager {
     private JamesHelper jamesHelper;
     private ResetPasswordHelper resetPassword;
     private SoapHelper soapHelper;
+    private DbHelper dbHelper;
 
 
     public ApplicationManager() {
@@ -29,8 +30,9 @@ public class ApplicationManager {
     }
 
     public void init() throws IOException {
-        String target = System.getProperty("target", "mantis.local.properties");
+        String target = System.getProperty("target", "local.properties");
         properties.load(new FileReader(new File(String.format("src/test/resources/%s", target))));
+        dbHelper = new DbHelper();
     }
 
     public void stop() {
@@ -64,6 +66,10 @@ public class ApplicationManager {
         return new HttpSession(this);
     }
 
+
+    public DbHelper db() {
+        return dbHelper;
+    }
 
     public FtpHelper ftp() {
         if (ftp == null) {
@@ -107,4 +113,6 @@ public class ApplicationManager {
         }
         return soapHelper;
     }
+
+
 }

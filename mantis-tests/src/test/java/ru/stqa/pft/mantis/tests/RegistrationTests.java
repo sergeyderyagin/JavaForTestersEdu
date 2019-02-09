@@ -11,12 +11,17 @@ import java.util.List;
 
 import static org.testng.Assert.assertTrue;
 
+/**
+ * для получения писем на стронеем почтовом сервисе James:
+ * 1. раскомментировать startMailServer, stopMailServer, app.james().waitForMail
+ */
 public class RegistrationTests extends TestBase{
 
 //    @BeforeMethod
     public void startMailServer() {
         app.mail().start();
     }
+
 
     @Test
     public void testRegistration() throws IOException, MessagingException {
@@ -27,11 +32,11 @@ public class RegistrationTests extends TestBase{
 
         app.james().createUser(user, password);
         app.registration().start(user, email);
-//        List<MailMessage> mailMessages = app.mail().waitForMail(2, 5000);
+        List<MailMessage> mailMessages = app.mail().waitForMail(2, 20000);
 
-        List<MailMessage> mailMessages = app.james().waitForMail(user, password, 60000);
+//        List<MailMessage> mailMessages = app.james().waitForMail(user, password, 60000);
 
-        String confirmationLink = app.james().findConfirmationLink(mailMessages, email);
+        String confirmationLink = app.mail().findConfirmationLink(mailMessages, email);
         app.registration().finish(confirmationLink, password);
         assertTrue(app.newSession().login(user, password));
     }
