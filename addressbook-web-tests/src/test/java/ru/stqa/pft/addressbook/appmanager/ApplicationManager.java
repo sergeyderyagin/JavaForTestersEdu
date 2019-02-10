@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+
 public class ApplicationManager {
     private final Properties properties;
     WebDriver wd;
@@ -27,7 +28,7 @@ public class ApplicationManager {
     }
 
     public void init() throws IOException {
-        String target = System.getProperty("properties", "local.properties");
+        String target = System.getProperty("target", "local.properties");
         properties.load(new FileReader(new File(String.format("src/test/resources/%s", target))));
         String browser = properties.getProperty("web.browser");
         dbHelper = new DbHelper();

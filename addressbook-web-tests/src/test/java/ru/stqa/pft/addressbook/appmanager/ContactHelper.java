@@ -44,19 +44,16 @@ public class ContactHelper extends HelperBase {
 
     public void addToGroup(ContactData contact, GroupData group) {
         selectById(contact.getId());
-//        click(By.xpath("//select[@name='to_group']//option[@value='" + group.getId() + "']"));
         new Select(wd.findElement(By.name("to_group"))).selectByValue(String.valueOf(group.getId()));
-
         click(By.name("add"));
         contactsCache = null;
     }
 
-    public void deleteFromGroup(ContactData contact,GroupData group) {
+    public void deleteFromGroup(ContactData contact, GroupData group) {
         new Select(wd.findElement(By.name("group"))).selectByValue(String.valueOf(group.getId()));
         selectById(contact.getId());
         click(By.name("remove"));
         contactsCache = null;
-
     }
 
 

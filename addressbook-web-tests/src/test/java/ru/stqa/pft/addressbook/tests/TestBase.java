@@ -21,10 +21,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 
-
 public class TestBase {
     Logger LOGGER = LoggerFactory.getLogger(TestBase.class);
     final static ApplicationManager app = new ApplicationManager();
+
 
     @BeforeSuite(alwaysRun = true)
     public void setUp() throws IOException {

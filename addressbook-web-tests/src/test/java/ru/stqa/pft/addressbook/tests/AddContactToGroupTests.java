@@ -16,7 +16,6 @@ public class AddContactToGroupTests extends TestBase {
 
     @BeforeMethod
     public void ensurePreconditions() {
-
         // Создание группы, если группа отсутствует.
         if (app.db().groups().size() == 0) {
             app.goTo().groupPage();
@@ -35,54 +34,41 @@ public class AddContactToGroupTests extends TestBase {
 
     @Test
     public void testAddContactToGroup() {
-        Contacts allContacts = app.contact().all();
-        Groups allGroups = app.group().all();
         GroupData group;
-        ContactData contact = getAvailableContact(allContacts, allGroups);
-
-        if (contact != null) {
-            group = getAvailableGroup(contact, allGroups);
-        } else {
-            app.goTo().groupPage();
-            group = new GroupData().withName("test2name").withHeader("test2header").withFooter("test2footer");
-            app.group().create(group);
-            contact = app.contact().all().iterator().next();
-        }
-
+        ContactData contact = getAvailableContactToAddToGroup();
         int contactId = contact.getId();
+
+        group = getAvailableGroupForAdd(contact);
+        assertNotNull(group);
+
         Groups groupsBefore = contact.getGroups();
 
         app.goTo().homePage();
         app.contact().addToGroup(contact, group);
 
-        Groups groupsAfter = app.contact().getContactById(app.contact().all(), contactId).getGroups();
+        Groups groupsAfter = app.contact().getContactById(app.db().contacts(), contactId).getGroups();
 
         assertThat(groupsAfter.size(), equalTo(groupsBefore.size() + 1));
         assertThat(groupsAfter, equalTo(groupsBefore.withAdded(group)));
     }
 
-//    @Test(priority = 2)
-//    public void testDeleteContactFromGroup(){
-//        Groups before = new Groups();
-//        for (ContactData contact : app.db().contacts()) {
-//            if (contact.getId() == addingContact.getId()) {
-//                before = contact.getGroups();
-//                break;
-//            }
-//        }
-//
-//        app.goTo().homePage();
-//        app.contact().deleteFromGroup(addingContact, newGroup);
-//        Groups after = new Groups();
-//
-//        for (ContactData contact : app.db().contacts()) {
-//            if (contact.getId() == addingContact.getId()) {
-//                after = contact.getGroups();
-//                break;
-//            }
-//        }
-//        assertThat(after, equalTo(before.without(newGroup)));
-//    }
+    @Test
+    public void testDeleteContactFromGroup(){
+
+        ContactData contact = getAvailableContactToDeleteFromGroup();
+        int contactId = contact.getId();
+        GroupData group = contact.getGroups().iterator().next();
+
+        Groups groupsBefore = contact.getGroups();
+
+        app.goTo().homePage();
+        app.contact().deleteFromGroup(contact, group);
+
+        Groups groupsAfter = app.contact().getContactById(app.db().contacts(), contactId).getGroups();
+
+
+        assertThat(groupsAfter, equalTo(groupsBefore.without(group)));
+    }
 
 
 
@@ -90,22 +76,50 @@ public class AddContactToGroupTests extends TestBase {
 
 
 
-    private ContactData getAvailableContact(Contacts allContacts, Groups allGroups) {
-        for (ContactData contact : allContacts) {
-            if (contact.getGroups().size() < allGroups.size()) {
+    private ContactData getAvailableContactToAddToGroup() {
+        Contacts contacts = app.db().contacts();
+        Groups groups = app.db().groups();
+        for (ContactData contact : contacts) {
+            if (contact.getGroups().size() < groups.size()) {
                 return contact;
             }
+        }
+        // Если подходяего контакта не нашлось, создаем новый
+        app.goTo().homePage();
+        ContactData contact = new ContactData().withFirstName("testfirstname2").withLastName("testlastname2")
+                .withAddress("testaddress")
+                .withHomePhone("79110001122").withMobilePhone("+79110003344").withWorkPhone("+79110005566")
+                .withEmail_1("1@test.ru").withEmail_2("2@test.ru").withEmail_3("3@test.ru");
+        app.contact().create(contact, true);
+        return contact;
+    }
+
+    private GroupData getAvailableGroupForAdd(ContactData contact) {
+        Groups groups = app.db().groups();
+        for (GroupData group : contact.getGroups()) {
+            groups.remove(group);
+        }
+        if (groups.size() > 0) {
+            return groups.iterator().next();
+
         }
         return null;
     }
 
 
-    private GroupData getAvailableGroup(ContactData contact, Groups allGroups) {
-        for (GroupData group : contact.getGroups()) {
-            allGroups.remove(group);
+    private ContactData getAvailableContactToDeleteFromGroup() {
+        Contacts contacts = app.db().contacts();
+        for (ContactData contact : contacts) {
+            if (contact.getGroups().size() > 0) {
+                return contact;
+            }
         }
-        assertTrue(allGroups.size() > 0);
-        return allGroups.iterator().next();
+        // Если подходяего контакта не нашлось, добавляем этот контакт в группу
+        ContactData contact = contacts.iterator().next();
+        app.contact().addToGroup(contact, app.db().groups().iterator().next());
+        return contact;
     }
+
+
 
 }
