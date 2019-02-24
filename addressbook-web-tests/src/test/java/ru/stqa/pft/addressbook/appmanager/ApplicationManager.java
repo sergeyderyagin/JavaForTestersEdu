@@ -26,17 +26,15 @@ public class ApplicationManager {
     private NavigationHelper navigationHelper;
     private GroupHelper groupHelper;
     private DbHelper dbHelper;
-    private String browser;
 
-    public ApplicationManager(String browser) {
-        this.browser = browser;
+    public ApplicationManager() {
         properties = new Properties();
     }
 
     public void init() throws IOException {
         String target = System.getProperty("target", "local.properties");
         properties.load(new FileReader(new File(String.format("src/test/resources/%s", target))));
-//        String browser = properties.getProperty("web.browser");
+        String browser = properties.getProperty("web.browser");
         dbHelper = new DbHelper();
 
         if ("".equals(properties.getProperty("selenium.server"))) {
